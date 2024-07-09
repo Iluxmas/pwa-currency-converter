@@ -1,0 +1,10 @@
+.container {
+  color: #232323;
+  font-family: 'Montserrat', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  width: 340px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+}
