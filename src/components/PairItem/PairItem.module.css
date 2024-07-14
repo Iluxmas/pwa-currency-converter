@@ -14,14 +14,15 @@
   background-color: #fff;
   border: 1px solid #666;
   padding: 1px 3px;
+  flex-grow: 1;
 
-  &::webkit-inner-spin-button {
+  &::-webkit-inner-spin-button {
     appearance: none;
     -webkit-appearance: none;
     margin: 0;
   }
 
-  &::webkit-outer-spin-button {
+  &::-webkit-outer-spin-button {
     appearance: none;
     -webkit-appearance: none;
     margin: 0;
@@ -36,6 +37,7 @@
 }
 
 .resultValue {
+  flex-grow: 1;
   padding: 2px;
   text-align: end;
   line-height: 16px;

@@ -7,4 +7,5 @@
   max-width: 340px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }

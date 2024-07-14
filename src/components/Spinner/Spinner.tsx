@@ -2,8 +2,8 @@ import styles from './Spinner.module.css';
 
 export default function Spinner() {
   return (
-    <div className={styles.container}>
-      <div className={styles.spinner}></div>
-    </div>
+    <span className={styles.container}>
+      <span className={styles.spinner}></span>
+    </span>
   );
 }

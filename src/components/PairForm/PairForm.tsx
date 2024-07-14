@@ -14,6 +14,7 @@ export const PairForm: FC<PairFormProps> = ({ codes, onAdd }) => {
   const [data, setData] = useState([['', '']]);
 
   useEffect(() => {
+    if (!codes) return;
     const entries = Object.entries(codes);
 
     if (entries.length) {
@@ -27,6 +28,12 @@ export const PairForm: FC<PairFormProps> = ({ codes, onAdd }) => {
     onAdd(source, target);
   }
 
+  if (!codes) return null;
+
+  // console.log('data');
+  // console.log(data);
+  // console.log('codes');
+  // console.log(codes);
   return (
     <div className={styles.formContainer}>
       <h1 className={styles.header}>Add new pair</h1>

@@ -1,44 +1,37 @@
-import { useCallback, useEffect } from 'react';
-import styles from './App.module.css';
-import { PairsList } from '../PairsList/PairsList';
-import { PairForm } from '../PairForm/PairForm';
-import { TPairs, TRatio } from '../../types/types';
+import { FC, useEffect, useState } from 'react';
 import useLocalStorage from '../../hooks/useLocalStorage';
+import { PairsList } from '@/components/PairsList/PairsList';
+import { PairForm } from '@/components/PairForm/PairForm';
+import { TPairs, TRatio } from '@/types/types';
+import { useCodes } from '@/api/useCodes';
+import { useRatio } from '@/api/useRatio';
 
-function App(props) {
-  const [codes, setCodes] = useLocalStorage('codesList', {});
+import styles from './App.module.css';
+
+export const App: FC = () => {
   const [pairs, setPairs] = useLocalStorage<TPairs>('pairs', []);
-  const [ratios, setRatios] = useLocalStorage<TRatio[] | []>('ratios', []);
+  const [ratios, setRatios] = useLocalStorage<{ [key: string]: TRatio }>('ratios', {});
+  const [currencyBase, setCurrencyBase] = useState('');
 
-  const getNewRate = useCallback((sourceCurrency: string): void => {
-    // chrome.runtime.sendMessage({ type: MessageType.getRate, value: sourceCurrency }, function (response) {
-    //   setRatios(response.ratios);
-    // });
-  }, []);
-
-  // get currency codes
-  useEffect(() => {
-    if (codes && Object.keys(codes).length === 0) {
-      // chrome.runtime.sendMessage({ type: MessageType.getCodes }, function (response) {
-      //   setCodes(response.codesList);
-      // });
-    }
-  }, []);
-
-  useEffect(() => {
-    const keys = ratios.map((ratio) => Object.keys(ratio)[0]);
-
-    for (let i = 0; i < pairs.length; i++) {
-      if (keys.indexOf(pairs[i][0]) < 0) {
-        getNewRate(pairs[i][0]);
-      }
-    }
-  }, [pairs]);
+  const { data, isLoading } = useCodes();
+  const { data: ratioData, isLoading: isRatioLoading } = useRatio(currencyBase);
 
   const handleAddPair = (sourceCurrency: string, targetCurrency: string): void => {
-    const newPairsData = pairs ? [...pairs, [sourceCurrency, targetCurrency]] : [[sourceCurrency, targetCurrency]];
+    const newPair = [sourceCurrency, targetCurrency] as const;
+    const newPairsData = (pairs ? [...pairs, newPair] : [newPair]) as TPairs;
+
+    if (!ratios[sourceCurrency]) {
+      setCurrencyBase(sourceCurrency);
+    }
+
     setPairs(newPairsData);
   };
+
+  useEffect(() => {
+    if (ratioData) {
+      setRatios((prev) => ({ ...prev, [currencyBase]: ratioData.rates }));
+    }
+  }, [ratioData]);
 
   const handleDeletePair = (sourceCurrency: string, targetCurrency: string): void => {
     const newPairs = pairs.filter((item) => !(item[0] === sourceCurrency && item[1] === targetCurrency));
@@ -51,12 +44,15 @@ function App(props) {
     // });
   };
 
+  console.log('ratioData');
+  console.log(ratioData);
+
+  if (!data || isLoading) return null;
+
   return (
     <div className={styles.container}>
       <PairsList pairsData={pairs} rates={ratios} onDelete={handleDeletePair} onUpdate={handleUpdate} />
-      <PairForm codes={codes} onAdd={handleAddPair} />
+      <PairForm codes={data.symbols} onAdd={handleAddPair} />
     </div>
   );
-}
-
-export default App;
+};

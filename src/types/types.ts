@@ -19,16 +19,32 @@ export enum MessageType {
   updateRates = 'updateRates',
 }
 
-export type TPairs = string[][];
+export type TPairs = [string, string][];
 
 export type TRatio = {
-  [key: string]: {
-    base: string;
-    date: string;
-    rates: {
-      [key: string]: number;
-    };
-    success: boolean;
-    timestamp: number;
+  base: string;
+  date: string;
+  rates: {
+    [key: string]: number;
   };
+  success: boolean;
+  timestamp: number;
+};
+;
+
+type Codes = {
+  success: boolean;
+  symbols?: {
+    [key: string]: string;
+  };
+};
+
+type Ratio = {
+  base: string;
+  date: string;
+  rates: {
+    [key: string]: number;
+  };
+  success: boolean;
+  timestamp: number;
 };

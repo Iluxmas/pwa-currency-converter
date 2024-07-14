@@ -1,5 +1,6 @@
 import { useState, useEffect, FC } from 'react';
 import Spinner from '../Spinner/Spinner';
+import { TRatio } from '@/types/types';
 
 import styles from './PairItem.module.css';
 
@@ -7,16 +8,8 @@ type PairProps = {
   source: string;
   target: string;
   rates: {
-    [key: string]: {
-      base: string;
-      date: string;
-      rates: {
-        [key: string]: number;
-      };
-      success: boolean;
-      timestamp: number;
-    };
-  }[];
+    [key: string]: { [key: string]: number };
+  };
   onDelete: (arg1: string, arg2: string) => void;
 };
 
@@ -26,12 +19,11 @@ export const PairItem: FC<PairProps> = ({ source, target, rates, onDelete }) => 
   const [ratio, setRatio] = useState(0);
 
   useEffect(() => {
-    const rate = rates.find((item) => !!item[source]);
-    if (rate) {
-      setRatio(rate[source].rates[target]);
-      if (rate[source].rates[target] >= 1) {
+    if (rates[source]) {
+      setRatio(rates[source][target]);
+      if (rates[source][target] >= 1) {
         setAmount(1);
-      } else if (rate[source].rates[target] >= 0.1) {
+      } else if (rates[source][target] >= 0.1) {
         setAmount(10);
       } else {
         setAmount(100);
