@@ -10,7 +10,7 @@ import styles from './App.module.css';
 
 export const App: FC = () => {
   const [pairs, setPairs] = useLocalStorage<TPairs>('pairs', []);
-  const [ratios, setRatios] = useLocalStorage<{ [key: string]: TRatio }>('ratios', {});
+  const [ratios, setRatios] = useLocalStorage<{ [key: string]: TRatio['rates'] }>('ratios', {});
   const [currencyBase, setCurrencyBase] = useState('');
 
   const { data, isLoading } = useCodes();
@@ -43,9 +43,6 @@ export const App: FC = () => {
     //   console.log(response);
     // });
   };
-
-  console.log('ratioData');
-  console.log(ratioData);
 
   if (!data || isLoading) return null;
 

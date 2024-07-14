@@ -8,7 +8,7 @@ type PairProps = {
   source: string;
   target: string;
   rates: {
-    [key: string]: { [key: string]: number };
+    [key: string]: TRatio['rates'];
   };
   onDelete: (arg1: string, arg2: string) => void;
 };

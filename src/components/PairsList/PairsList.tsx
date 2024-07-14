@@ -4,7 +4,7 @@ import { PairItem } from '../PairItem/PairItem';
 import { TRatio } from '../../types/types';
 
 type PairListProps = {
-  rates: { [key: string]: TRatio };
+  rates: { [key: string]: TRatio['rates'] };
   pairsData: string[][];
   onDelete: (arg1: string, arg2: string) => void;
   onUpdate: () => void;
@@ -14,9 +14,6 @@ export const PairsList: FC<PairListProps> = ({ rates, pairsData, onDelete, onUpd
   if (pairsData.length === 0) {
     return null;
   }
-
-  console.log('rates');
-  console.log(rates);
 
   return (
     <div className={styles.container}>
