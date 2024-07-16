@@ -1,5 +1,7 @@
 const CACHE_NAME = 'version-1';
-const urlsToCache = ['index.html', 'offline.html']
+const index = '/pwa-currency-converter/index.html';
+const offline = '/pwa-currency-converter/offline.html';
+const urlsToCache = [index, offline]
 
 // eslint-disable-next-line @typescript-eslint/no-this-alias
 const self = this;
@@ -22,7 +24,7 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request)
     .then(() => {
       return fetch(event.request).catch(() => {
-        return caches.match('offline.html')
+        return caches.match(offline)
       })
     })
   )
