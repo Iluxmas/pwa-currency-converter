@@ -1,7 +1,7 @@
 {
   "name": "Currency Converter",
   "short_name": "Currency",
-  "start_url": "/",
+  "start_url": "/pwa-currency-converter/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
