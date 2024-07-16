@@ -13,14 +13,14 @@ export const App: FC = () => {
   const [ratios, setRatios] = useLocalStorage<{ [key: string]: TRatio['rates'] }>('ratios', {});
   const [currencyBase, setCurrencyBase] = useState('');
 
-  const { data, isLoading } = useCodes();
-  const { data: ratioData, isLoading: isRatioLoading } = useRatio(currencyBase);
+  const { codes, isLoading } = useCodes();
+  const { data } = useRatio(currencyBase);
 
   const handleAddPair = (sourceCurrency: string, targetCurrency: string): void => {
     const newPair = [sourceCurrency, targetCurrency] as const;
     const newPairsData = (pairs ? [...pairs, newPair] : [newPair]) as TPairs;
 
-    if (!ratios[sourceCurrency]) {
+    if (!ratios || !ratios[sourceCurrency]) {
       setCurrencyBase(sourceCurrency);
     }
 
@@ -28,10 +28,10 @@ export const App: FC = () => {
   };
 
   useEffect(() => {
-    if (ratioData) {
-      setRatios((prev) => ({ ...prev, [currencyBase]: ratioData.rates }));
+    if (data) {
+      setRatios((prev) => ({ ...prev, [currencyBase]: data }));
     }
-  }, [ratioData]);
+  }, [data]);
 
   const handleDeletePair = (sourceCurrency: string, targetCurrency: string): void => {
     const newPairs = pairs.filter((item) => !(item[0] === sourceCurrency && item[1] === targetCurrency));
@@ -44,12 +44,12 @@ export const App: FC = () => {
     // });
   };
 
-  if (!data || isLoading) return null;
+  if (!codes || isLoading || !ratios) return null;
 
   return (
     <div className={styles.container}>
       <PairsList pairsData={pairs} rates={ratios} onDelete={handleDeletePair} onUpdate={handleUpdate} />
-      <PairForm codes={data.symbols} onAdd={handleAddPair} />
+      <PairForm codes={codes} onAdd={handleAddPair} />
     </div>
   );
 };

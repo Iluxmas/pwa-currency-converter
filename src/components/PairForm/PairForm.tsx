@@ -1,10 +1,9 @@
 import { useEffect, useState, FC } from 'react';
 import styles from './PairForm.module.css';
+import { TCodeList } from '@/types/types';
 
 type PairFormProps = {
-  codes: {
-    [key: string]: string;
-  };
+  codes: TCodeList;
   onAdd: (arg1: string, arg2: string) => void;
 };
 

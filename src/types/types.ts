@@ -1,22 +1,5 @@
-interface IMessage {
-  type: MessageType;
-}
-
-interface IMessageOther {
-  type: MessageType.getCodes | MessageType.updateRates;
-}
-
-interface IMessageGetCurrency extends IMessage {
-  type: MessageType.getRate;
-  value: string;
-}
-
-export type TAllMessage = IMessageGetCurrency | IMessageOther;
-
-export enum MessageType {
-  getRate = 'getRate',
-  getCodes = 'getCodes',
-  updateRates = 'updateRates',
+export type TCodeList = {
+  [key: string]: string
 }
 
 export type TPairs = [string, string][];

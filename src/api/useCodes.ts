@@ -1,19 +1,36 @@
-import { useQuery } from '@tanstack/react-query';
 import { fetchCodes } from './api';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useEffect, useState } from 'react';
+import { TCodeList } from '@/types/types';
 
 
 export const useCodes = () => {
   const [storedCodes, setStoredCodes] = useLocalStorage('codesList', null);
+  const [codes, setCodes] = useState<TCodeList | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const query = useQuery({ queryKey: ['codes'], queryFn: fetchCodes, initialData: { symbols: storedCodes }, enabled: !storedCodes });
+  useEffect(() => {
+    const loadCodes = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchCodes();
+        setCodes(data.symbols);
+        setStoredCodes(data.symbols);
+        setError(null);
+      } catch (err) {
+        setError('Unable to load currency codes');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  if (query.isSuccess) {
-    if (query.data && query.data.symbols && query.data.symbols !== storedCodes) {
-
-      setStoredCodes(query.data.symbols);
+    if (storedCodes) {
+      setCodes(storedCodes);
+    } else {
+      loadCodes();
     }
-  }
+  }, [storedCodes, setStoredCodes]);
 
-  return query;
+  return { codes, isLoading, error };
 };

@@ -1,31 +1,30 @@
-import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { TRatio } from '@/types/types';
-import useLocalStorage from '../hooks/useLocalStorage';
 import { fetchRatio } from './api';
 
-
-
 export const useRatio = (base: string) => {
-  const [storedRatios, setStoredRatios] = useLocalStorage<{ [key: string]: TRatio }>('ratios', {});
-
-  const query = useQuery({
-    queryKey: ['ratio', base],
-    queryFn: () => fetchRatio(base),
-    initialData: storedRatios,
-    enabled: !!base
-  });
+  const [data, setData] = useState<TRatio['rates'] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (query.isSuccess && query.data && query.data.rates) {
-      setStoredRatios((prev) => {
-        if (JSON.stringify(prev[base]) !== JSON.stringify(query.data.rates)) {
-          return { ...prev, [base]: query.data.rates };
-        }
-        return prev;
-      });
-    }
-  }, [query.isSuccess, query.data, base, setStoredRatios]);
+    if (!base) return;
 
-  return query;
+    const loadRatios = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchRatio(base);
+        setData(data.rates);
+        setError(null);
+      } catch (err) {
+        setError('Unable to load data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadRatios();
+  }, [base]);
+
+  return { data, isLoading, error };
 };
