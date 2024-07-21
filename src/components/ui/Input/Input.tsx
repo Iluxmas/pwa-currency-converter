@@ -18,7 +18,7 @@ export const Input: React.FC<Props> = ({ label, value, onChange, ...props }) => 
       InputLabelProps={{
         shrink: true,
       }}
-      inputProps={{ style: { textAlign: 'end' } }}
+      inputProps={{ style: { textAlign: 'end' }, inputMode: 'numeric' }}
     />
   );
 };
