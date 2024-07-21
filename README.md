@@ -1,30 +1,47 @@
-# React + TypeScript + Vite
+# Currency Converter PWA
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Progressive Web App (PWA) for converting currencies. This application allows users to add currency pairs, fetch the latest exchange rates, and perform conversions offline using cached data.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Add Currency Pairs:** Add any pair of currencies to convert between.
+- **Fetch Latest Exchange Rates:** Fetch the latest exchange rates for added currency pairs.
+- **Offline Support:** Convert currencies based on the last fetched rates even when offline.
+- **PWA:** Installable on mobile and desktop, with offline capabilities.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend:** React, TypeScript
+- **Styling:** CSS Modules and Material-UI
+- **HTTP Client:** Axios
+- **Build Tool:** Vite
+- **Deployment:** GitHub Pages
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/pwa-currency-converter.git
+   cd pwa-currency-converter
+   ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Add environment variables:**
+    Create a .env file in the root directory with the following content:
+    ```
+    VITE_API_KEY=your_api_key_here
+    ```
+    Key you can get at [Fixer Api](https://apilayer.com/marketplace/fixer-api)
+
+
+## Launch
+
+1. **Development server:**
+   ```bash
+   npm run dev
+   ```
+   The app will be available at http://localhost:5173.
