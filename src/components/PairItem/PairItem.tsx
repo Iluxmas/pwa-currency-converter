@@ -15,37 +15,39 @@ type PairProps = {
 };
 
 export const PairItem: FC<PairProps> = ({ source, target, rates, onDelete }) => {
-  let startAmount = '0';
+  const ratio = rates?.[source]?.[target] ?? 1;
 
-  if (rates[source]) {
-    if (rates[source][target] >= 1) {
-      startAmount = '1';
-    } else if (rates[source][target] >= 0.1) {
-      startAmount = '10';
-    } else if (rates[source][target] >= 0.01) {
-      startAmount = '100';
-    } else {
-      startAmount = '1000';
-    }
-  }
-
-  const [ratio, setRatio] = useState(rates?.[source]?.[target] ?? 1);
-  const [sourceAmount, setSourceAmount] = useState(startAmount);
+  const [sourceAmount, setSourceAmount] = useState('1');
   const [targetAmount, setTargetAmount] = useState((Number(sourceAmount) * ratio).toFixed(2));
 
-  const value = rates?.[source]?.[target];
-
   useEffect(() => {
-    setRatio(rates?.[source]?.[target]);
-  }, [value]);
+    if (!rates || !rates[source]) return;
+    let newSourceAmount = '1';
+
+    if (rates[source]) {
+      if (rates[source][target] >= 1) {
+        newSourceAmount = '1';
+      } else if (rates[source][target] >= 0.1) {
+        newSourceAmount = '10';
+      } else if (rates[source][target] >= 0.01) {
+        newSourceAmount = '100';
+      } else {
+        newSourceAmount = '1000';
+      }
+    }
+
+    setSourceAmount(newSourceAmount);
+    setTargetAmount((Number(newSourceAmount) * rates?.[source]?.[target]).toFixed(2));
+  }, [rates[source]]);
 
   const handleSourceChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setSourceAmount(e.target.value);
     setTargetAmount((Number(e.target.value) * ratio).toFixed(2));
   };
+
   const handleTargetChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setTargetAmount(e.target.value);
-    setSourceAmount(((Number(e.target.value) * 1) / ratio).toFixed(2));
+    setSourceAmount((Number(e.target.value) / ratio).toFixed(2));
   };
 
   return (

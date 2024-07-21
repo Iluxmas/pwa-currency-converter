@@ -10,14 +10,11 @@ import styles from './App.module.css';
 export const App: FC = () => {
   const [pairs, setPairs] = useLocalStorage<TPairs>('pairs', []);
   const [ratios, setRatios] = useLocalStorage<{ [key: string]: TRatio['rates'] }>('ratios', {});
-  // const [currencyBase, setCurrencyBase] = useState('');
-  // const [fetchAll, setFetchAll] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  console.log('ratios');
-  console.log(ratios);
-
   const handleAddPair = (sourceCurrency: string, targetCurrency: string): void => {
+    if (pairs.some((pair) => pair[0] === sourceCurrency && pair[1] === targetCurrency)) return;
+
     const newPair = [sourceCurrency, targetCurrency] as const;
     const newPairsData = (pairs ? [...pairs, newPair] : [newPair]) as TPairs;
 
