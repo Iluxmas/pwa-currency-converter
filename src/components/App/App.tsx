@@ -1,55 +1,72 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { PairsList } from '@/components/PairsList/PairsList';
 import { PairForm } from '@/components/PairForm/PairForm';
 import { TPairs, TRatio } from '@/types/types';
-import { useCodes } from '@/api/useCodes';
-import { useRatio } from '@/api/useRatio';
+import { fetchRatio } from '@/api/api';
 
 import styles from './App.module.css';
 
 export const App: FC = () => {
   const [pairs, setPairs] = useLocalStorage<TPairs>('pairs', []);
   const [ratios, setRatios] = useLocalStorage<{ [key: string]: TRatio['rates'] }>('ratios', {});
-  const [currencyBase, setCurrencyBase] = useState('');
+  // const [currencyBase, setCurrencyBase] = useState('');
+  // const [fetchAll, setFetchAll] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const { codes, isLoading } = useCodes();
-  const { data } = useRatio(currencyBase);
+  console.log('ratios');
+  console.log(ratios);
 
   const handleAddPair = (sourceCurrency: string, targetCurrency: string): void => {
     const newPair = [sourceCurrency, targetCurrency] as const;
     const newPairsData = (pairs ? [...pairs, newPair] : [newPair]) as TPairs;
 
-    if (!ratios || !ratios[sourceCurrency]) {
-      setCurrencyBase(sourceCurrency);
+    if (!ratios[sourceCurrency]) {
+      handleUpdate([sourceCurrency]);
     }
 
     setPairs(newPairsData);
   };
-
-  useEffect(() => {
-    if (data) {
-      setRatios((prev) => ({ ...prev, [currencyBase]: data }));
-    }
-  }, [data]);
 
   const handleDeletePair = (sourceCurrency: string, targetCurrency: string): void => {
     const newPairs = pairs.filter((item) => !(item[0] === sourceCurrency && item[1] === targetCurrency));
     setPairs(newPairs);
   };
 
-  const handleUpdate = () => {
-    // chrome.runtime.sendMessage({ type: MessageType.updateRates }, function (response) {
-    //   console.log(response);
-    // });
+  const handleUpdate = async (bases?: string[]) => {
+    const uniqueBases = bases || [...new Set(pairs.map((pair) => pair[0]))];
+    setIsUpdating(true);
+
+    const fetchedRatios = await Promise.all(
+      uniqueBases.map(async (base) => {
+        const data = await fetchRatio(base);
+        return { base, rates: data.rates };
+      })
+    );
+
+    setRatios((prev) => {
+      const updatedRatios = { ...prev };
+      fetchedRatios.forEach(({ base, rates }) => {
+        updatedRatios[base] = rates;
+      });
+      return updatedRatios;
+    });
+
+    setIsUpdating(false);
   };
 
-  if (!codes || isLoading || !ratios) return null;
+  if (!ratios) return null;
 
   return (
     <div className={styles.container}>
-      <PairsList pairsData={pairs} rates={ratios} onDelete={handleDeletePair} onUpdate={handleUpdate} />
-      <PairForm codes={codes} onAdd={handleAddPair} />
+      <PairsList
+        pairsData={pairs}
+        rates={ratios}
+        isLoading={isUpdating}
+        onDelete={handleDeletePair}
+        onUpdate={() => handleUpdate()}
+      />
+      <PairForm onAdd={handleAddPair} />
     </div>
   );
 };
