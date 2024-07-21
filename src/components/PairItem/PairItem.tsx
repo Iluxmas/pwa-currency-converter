@@ -39,11 +39,11 @@ export const PairItem: FC<PairProps> = ({ source, target, rates, onDelete }) => 
     setRatio(rates?.[source]?.[target]);
   }, [value]);
 
-  const handleSourceChange = (e) => {
+  const handleSourceChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setSourceAmount(e.target.value);
     setTargetAmount((Number(e.target.value) * ratio).toFixed(2));
   };
-  const handleTargetChange = (e) => {
+  const handleTargetChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setTargetAmount(e.target.value);
     setSourceAmount(((Number(e.target.value) * 1) / ratio).toFixed(2));
   };

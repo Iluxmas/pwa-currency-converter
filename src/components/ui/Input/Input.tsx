@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 
-interface Props extends TextFieldProps {
+interface Props extends Omit<TextFieldProps, 'label' | 'value' | 'onChange'> {
   label: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
