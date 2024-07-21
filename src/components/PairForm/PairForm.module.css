@@ -1,48 +1,7 @@
 .formContainer {
+  width: 100%;
+  padding: 16px 12px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-}
-
-.header {
-  color: #232323;
-  font-size: 18px;
-  font-weight: 700;
-  margin-top: 0;
-}
-
-.selectContainer {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.label {
-  width: 20%;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 14px;
-}
-
-.select {
-  width: 76%;
-  color: #252525;
-  background-color: #fff;
-  border: 1px solid #666;
-}
-
-.addButton {
-  margin: 8px 0 0 auto;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  outline: none;
-  color: #252525;
-  background-color: #ddd;
-}
-
-.option {
-  color: #252525;
 }

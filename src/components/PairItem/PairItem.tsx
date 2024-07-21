@@ -1,8 +1,9 @@
-import { useState, useEffect, FC } from 'react';
-import Spinner from '../Spinner/Spinner';
+import { useState, FC, useEffect } from 'react';
 import { TRatio } from '@/types/types';
-
-import styles from './PairItem.module.css';
+import { IconButton } from '../ui/IconButton/IconButton';
+import { Input } from '../ui/Input/Input';
+import { UIBox } from '../ui/Box/Box';
+import { Icon } from '@mui/material';
 
 type PairProps = {
   source: string;
@@ -14,45 +15,45 @@ type PairProps = {
 };
 
 export const PairItem: FC<PairProps> = ({ source, target, rates, onDelete }) => {
-  const [amount, setAmount] = useState(1);
-  const [isSwitched, setIsSwitched] = useState(false);
-  const [ratio, setRatio] = useState(0);
+  let startAmount = '0';
+
+  if (rates[source]) {
+    if (rates[source][target] >= 1) {
+      startAmount = '1';
+    } else if (rates[source][target] >= 0.1) {
+      startAmount = '10';
+    } else if (rates[source][target] >= 0.01) {
+      startAmount = '100';
+    } else {
+      startAmount = '1000';
+    }
+  }
+
+  const [ratio, setRatio] = useState(rates?.[source]?.[target] ?? 1);
+  const [sourceAmount, setSourceAmount] = useState(startAmount);
+  const [targetAmount, setTargetAmount] = useState((Number(sourceAmount) * ratio).toFixed(2));
+
+  const value = rates?.[source]?.[target];
 
   useEffect(() => {
-    if (rates[source]) {
-      setRatio(rates[source][target]);
-      if (rates[source][target] >= 1) {
-        setAmount(1);
-      } else if (rates[source][target] >= 0.1) {
-        setAmount(10);
-      } else {
-        setAmount(100);
-      }
-    }
-  }, [rates, target, source]);
+    setRatio(rates?.[source]?.[target]);
+  }, [value]);
+
+  const handleSourceChange = (e) => {
+    setSourceAmount(e.target.value);
+    setTargetAmount((Number(e.target.value) * ratio).toFixed(2));
+  };
+  const handleTargetChange = (e) => {
+    setTargetAmount(e.target.value);
+    setSourceAmount(((Number(e.target.value) * 1) / ratio).toFixed(2));
+  };
 
   return (
-    <li className={styles.pairItem}>
-      <input
-        type='number'
-        value={amount}
-        min={0}
-        max={9999999}
-        className={styles.input}
-        onChange={({ target }) => setAmount(target.valueAsNumber)}
-      />
-      <span className={styles.currency}>{isSwitched ? target : source}</span>
-      <span>=</span>
-      <p className={styles.resultValue}>
-        {ratio ? (amount * (isSwitched ? 1 / ratio : ratio)).toFixed(2) : <Spinner />}
-      </p>
-      <span className={styles.currency}>{isSwitched ? source : target}</span>
-      <button className={[styles.button, styles.buttonSwitch].join(' ')} onClick={() => setIsSwitched(!isSwitched)}>
-        &#8644;
-      </button>
-      <button className={[styles.button, styles.buttonDelete].join(' ')} onClick={() => onDelete(source, target)}>
-        &#10005;
-      </button>
-    </li>
+    <UIBox sx={{ flexWrap: 'nowrap' }}>
+      <Input label={source} value={sourceAmount} onChange={handleSourceChange} />
+      <Icon fontSize='small'>sync_alt</Icon>
+      <Input label={target} value={targetAmount} onChange={handleTargetChange} />
+      <IconButton iconName='close' onClick={() => onDelete(source, target)} />
+    </UIBox>
   );
 };

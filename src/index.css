@@ -3,6 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -50,6 +51,14 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
 }
 
 @media (prefers-color-scheme: light) {

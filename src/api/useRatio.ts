@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { TRatio } from '@/types/types';
 import { fetchRatio } from './api';
 
-export const useRatio = (base: string) => {
+export const useRatio = (base: string, shouldFetch: boolean = true) => {
   const [data, setData] = useState<TRatio['rates'] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!base) return;
+    if (!base || !shouldFetch) return;
 
     const loadRatios = async () => {
       setIsLoading(true);
@@ -24,7 +24,7 @@ export const useRatio = (base: string) => {
     };
 
     loadRatios();
-  }, [base]);
+  }, [base, shouldFetch]);
 
   return { data, isLoading, error };
 };
