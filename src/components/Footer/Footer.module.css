@@ -1,0 +1,11 @@
+.root {
+  padding: 16px 12px;
+  width: 100%;
+  text-align: end;
+  box-sizing: border-box;
+}
+
+.date {
+  font-size: 16px;
+  margin: 0;
+}

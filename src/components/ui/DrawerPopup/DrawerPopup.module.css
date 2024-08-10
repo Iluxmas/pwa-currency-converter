@@ -1,0 +1,7 @@
+.innerContainer {
+  padding: 12px;
+  padding-top: 24px;
+  padding-bottom: 144px;
+  display: flex;
+  flex-direction: column;
+}

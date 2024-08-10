@@ -4,13 +4,20 @@ import { PairsList } from '@/components/PairsList/PairsList';
 import { PairForm } from '@/components/PairForm/PairForm';
 import { TPairs, TRatio } from '@/types/types';
 import { fetchRatio } from '@/api/api';
+import { formatDate } from '@/utils/convertDate';
 
 import styles from './App.module.css';
+import Footer from '../Footer/Footer';
+import { UiButton } from '../ui/Button/Button';
 
 export const App: FC = () => {
   const [pairs, setPairs] = useLocalStorage<TPairs>('pairs', []);
   const [ratios, setRatios] = useLocalStorage<{ [key: string]: TRatio['rates'] }>('ratios', {});
   const [isUpdating, setIsUpdating] = useState(false);
+  const [updateTime, setUpdateTime] = useLocalStorage<string>('updateTime', '');
+  const [isOpen, setIsOpen] = useState(false);
+  // TODO: SHOW LAST UPDATED DATE
+  // TODO: RESET SELECT VALUE AFTER ADD
 
   const handleAddPair = (sourceCurrency: string, targetCurrency: string): void => {
     if (pairs.some((pair) => pair[0] === sourceCurrency && pair[1] === targetCurrency)) return;
@@ -20,6 +27,10 @@ export const App: FC = () => {
 
     if (!ratios[sourceCurrency]) {
       handleUpdate([sourceCurrency]);
+    }
+
+    if (pairs.length === 0) {
+      setUpdateTime(new Date().toISOString());
     }
 
     setPairs(newPairsData);
@@ -49,21 +60,29 @@ export const App: FC = () => {
       return updatedRatios;
     });
 
+    setUpdateTime(new Date().toISOString());
     setIsUpdating(false);
+  };
+
+  const handleToggleDrawerVisibility = () => {
+    setIsOpen((prev) => !prev);
   };
 
   if (!ratios) return null;
 
+  const displayedDate = updateTime ? formatDate(updateTime) : '';
+
   return (
     <div className={styles.container}>
-      <PairsList
-        pairsData={pairs}
-        rates={ratios}
-        isLoading={isUpdating}
-        onDelete={handleDeletePair}
-        onUpdate={() => handleUpdate()}
-      />
-      <PairForm onAdd={handleAddPair} />
+      <PairsList pairsData={pairs} rates={ratios} onDelete={handleDeletePair} />
+      <div className={styles.buttonGroup}>
+        <UiButton onClick={handleToggleDrawerVisibility} variant='contained' fullWidth text='+' sx={{ mt: 'auto' }} />
+        {pairs.length > 0 && (
+          <UiButton onClick={() => handleUpdate()} isLoading={isUpdating} text='Update rates' fullWidth />
+        )}
+      </div>
+      <PairForm onAdd={handleAddPair} isOpen={isOpen} onClose={handleToggleDrawerVisibility} />
+      <Footer updateTime={updateTime} displayedDate={displayedDate} />
     </div>
   );
 };
