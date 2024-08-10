@@ -1,5 +1,4 @@
 import { useState, FC } from 'react';
-import styles from './PairForm.module.css';
 import { UiButton } from '../ui/Button/Button';
 import { UISelect } from '../ui/Select/Select';
 import { useCodes } from '@/api/useCodes';
