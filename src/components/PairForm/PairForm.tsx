@@ -3,8 +3,8 @@ import { UiButton } from '../ui/Button/Button';
 import { UISelect } from '../ui/Select/Select';
 import { useCodes } from '@/api/useCodes';
 import Spinner from '../Spinner/Spinner';
-import { Typography } from '@mui/material';
 import { DrawerPopup } from '../ui/DrawerPopup/DrawerPopup';
+import { Heading } from '../ui/Heading/Heading';
 
 type PairFormProps = {
   onAdd: (arg1: string, arg2: string) => void;
@@ -22,6 +22,8 @@ export const PairForm: FC<PairFormProps> = ({ onAdd, isOpen, onClose }) => {
     if (!source || !target) return;
 
     onAdd(source, target);
+    setSource(undefined);
+    setTarget(undefined);
   }
 
   if (isLoading) {
@@ -35,9 +37,9 @@ export const PairForm: FC<PairFormProps> = ({ onAdd, isOpen, onClose }) => {
   return (
     <>
       <DrawerPopup isOpen={isOpen} onClose={onClose}>
-        <Typography variant='h5' color='primary' component='h2' py={1}>
+        <Heading variant='h5' color='primary' component='h2' py={1}>
           Currencies
-        </Typography>
+        </Heading>
         <UISelect label='source' options={options} onChange={({ target }) => setSource(target.value)} value={source} />
         <UISelect label='target' options={options} onChange={({ target }) => setTarget(target.value)} value={target} />
         <UiButton text='Add' onClick={addNewPair} disabled={!source || !target || source === target} />
