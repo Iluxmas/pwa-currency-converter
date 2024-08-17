@@ -2,6 +2,7 @@ import { fetchCodes } from './api';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useEffect, useState } from 'react';
 import { TCodeList } from '@/types/types';
+import { mockFetchCodes } from './apiMock';
 
 
 export const useCodes = () => {
@@ -14,7 +15,7 @@ export const useCodes = () => {
     const loadCodes = async () => {
       setIsLoading(true);
       try {
-        const data = await fetchCodes();
+        const data = await (import.meta.env.DEV ? mockFetchCodes : fetchCodes)();
         setCodes(data.symbols);
         setStoredCodes(data.symbols);
         setError(null);

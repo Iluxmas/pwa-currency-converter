@@ -15,7 +15,7 @@ A Progressive Web App (PWA) for converting currencies. This application allows u
 - **Styling:** CSS Modules and Material-UI
 - **HTTP Client:** Axios
 - **Build Tool:** Vite
-- **Deployment:** GitHub Pages
+- **Deploy:** GitHub Pages
 
 ## Installation
 
@@ -44,4 +44,17 @@ A Progressive Web App (PWA) for converting currencies. This application allows u
    ```bash
    npm run dev
    ```
-   The app will be available at http://localhost:5173.
+   The app will be available at http://localhost:5666
+
+
+## Changelog
+
+**10.08.2024**
+   - Design Update
+   - Added build check workflow
+   - Added api mock for development
+
+**21.07.2024**
+   - Moving component to MUI
+   - Complete refactor
+   - Added new icons

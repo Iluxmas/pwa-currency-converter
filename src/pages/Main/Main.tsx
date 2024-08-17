@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import clsx from 'clsx';
 import { PairsList } from '@/components/PairsList/PairsList';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { PairForm } from '@/components/PairForm/PairForm';
@@ -6,10 +7,10 @@ import { UiButton } from '@/components/ui/Button/Button';
 import { formatDate } from '@/utils/convertDate';
 import { TPairs, TRatio } from '@/types/types';
 import Footer from '@/components/Footer/Footer';
-import { fetchRatio } from '@/api/api';
+import { fetchCodes, fetchRatio } from '@/api/api';
+import { mockFetchCodes, mockFetchRatio } from '@/api/apiMock';
 import { ThemeSwitch } from '@/components/ui/ThemeSwitch/ThemeSwitch';
 import { isDarkMode } from '@/utils/isDarkMode';
-import clsx from 'clsx';
 
 import styles from './Main.module.css';
 
@@ -17,6 +18,17 @@ type Props = {
   switchTheme: () => void;
   mode: 'light' | 'dark';
 };
+
+const realApi = {
+  fetchRatio: fetchRatio,
+  fetchCodes: fetchCodes,
+};
+const mockApi = {
+  fetchCodes: mockFetchCodes,
+  fetchRatio: mockFetchRatio,
+};
+
+const api = import.meta.env.DEV ? mockApi : realApi;
 
 export const Main: FC<Props> = ({ switchTheme, mode }) => {
   const [pairs, setPairs] = useLocalStorage<TPairs>('pairs', []);
@@ -56,7 +68,7 @@ export const Main: FC<Props> = ({ switchTheme, mode }) => {
 
     const fetchedRatios = await Promise.all(
       uniqueBases.map(async (base) => {
-        const data = await fetchRatio(base);
+        const data = await api.fetchRatio(base);
         return { base, rates: data.rates };
       })
     );
