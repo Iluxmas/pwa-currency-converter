@@ -13,8 +13,8 @@ type PairFormProps = {
 };
 
 export const PairForm: FC<PairFormProps> = ({ onAdd, isOpen, onClose }) => {
-  const [source, setSource] = useState<string | undefined>();
-  const [target, setTarget] = useState<string | undefined>();
+  const [source, setSource] = useState<string | undefined>('');
+  const [target, setTarget] = useState<string | undefined>('');
 
   const { codes, isLoading } = useCodes();
 
@@ -22,8 +22,8 @@ export const PairForm: FC<PairFormProps> = ({ onAdd, isOpen, onClose }) => {
     if (!source || !target) return;
 
     onAdd(source, target);
-    setSource(undefined);
-    setTarget(undefined);
+    setSource('');
+    setTarget('');
   }
 
   if (isLoading) {
