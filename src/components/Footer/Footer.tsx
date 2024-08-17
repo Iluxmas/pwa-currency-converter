@@ -1,8 +1,7 @@
 import React from 'react';
-import styles from './Footer.module.css';
-import { Typography } from '@mui/material';
-import { useThemeMode } from '@/hooks/useThemeMode';
 import { Paragraph } from '../ui/Paragraph/Paragraph';
+
+import styles from './Footer.module.css';
 
 type FooterProps = {
   updateTime: string;
