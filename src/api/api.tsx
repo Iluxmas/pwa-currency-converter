@@ -13,7 +13,7 @@ export const fetchCodes = async () => {
     });
     return response.data;
   } catch (error) {
-    throw new Error('Unable to load currency codes');
+    console.log('Unable to load currency codes');
   }
 };
 
@@ -28,6 +28,6 @@ export const fetchRatio = async (base: string) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error('Unable to load data');
+    console.log('Unable to load data');
   }
 };

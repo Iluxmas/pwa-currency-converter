@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
     base: mode === 'development' ? '/' : '/pwa-currency-converter/',
     server: {
       host: true,
+      port: 5666,
     },
     resolve: {
       alias: {
